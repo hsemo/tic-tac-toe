@@ -11,8 +11,39 @@ function Game(){
   const [winner, setWinner] = useState(null);
 
   const xIsNext = currentMove % 2 === 0;
-  let currentSquares = history[currentMove].squares;
+  let currentSquares = [...history[currentMove].squares];
   const isDraw = !winner && history.length - 1 === (boardRows ** 2) && currentMove === history.length - 1;
+
+
+  function calculateWinner(){
+    const winPatterns = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
+
+    for (const pattern of winPatterns){
+      const [a, b, c] = pattern;
+      if(currentSquares[a] && currentSquares[a] === currentSquares[b] && currentSquares[a] === currentSquares[c]){
+        if(!winner){
+          // to prevent infinite re-renders
+          setWinner(currentSquares[a]);
+        }
+        return [a, b, c];
+      }
+    }
+
+    if(winner){
+      // to prevent infinite re-renders
+      setWinner(null);
+    }
+    return null;
+  }
 
   function handlePlay({nextSquares, nextMovePos}){
     const nxtHistory = [...history.slice(0, currentMove + 1), {squares: nextSquares, movePos: nextMovePos}];
@@ -24,6 +55,7 @@ function Game(){
     setCurrentMove(nextMove);
   }
 
+  let winSquares = calculateWinner();
   const moves = [...history.map(({squares, movePos}, move) => {
     let desc;
     if(!sortOrder){
@@ -31,40 +63,60 @@ function Game(){
     }
 
     if(move > 0){
-      desc = 'Go to move #' + move + ' at ' + history[move].movePos;
+      desc = 'Move #' + move + ' (' + history[move].movePos + ')';
     } else {
-      desc = 'Go to Game start.'
+      desc = 'Start'
     }
 
     return (
       <li key={move}>
-        <button onClick={() => jumpTo(move)}>{desc}</button>
+        <button className="btn move-btn" onClick={() => jumpTo(move)}>{desc}</button>
       </li>
     );
-    // }),(currentMove === history.length - 1 && (winner || isDraw))
     }),(winner || isDraw)
         ? null
         :
           <li key={history.length}>
-            <p>{`You are at move #${currentMove + 1}`}</p>
+            <p className="next-move">{`You are at move #${currentMove + 1}`}</p>
           </li>
   ];
+
+  let status = '';
+  if(winner && winSquares){
+    status = 'Winner: ' + winner;
+  } else if(isDraw){
+    status = "It's a draw";
+  } else{
+    status = 'Next turn: ' + (xIsNext ? 'X' : 'O');
+  }
 
   return (
     <div className="game">
       <div className="game-board">
-        <Board boardRows={boardRows}
+        <div className="status">{status}</div>
+
+        <Board
+          boardRows={boardRows}
           xIsNext={xIsNext}
           squares={currentSquares}
           onPlay={handlePlay}
-          onWin={(winner) => setWinner(winner)}
           winner={winner}
-          isDraw={isDraw}
+          winSquares={winSquares}
         >
         </Board>
       </div>
+
       <div className="game-info">
-        <button onClick={() => setSortOrder(!sortOrder)}>Change sort order to {sortOrder ? 'descending' : 'ascending'}</button>
+        <div className="sort">
+          <button
+            className="btn sort-btn"
+            onClick={() => setSortOrder(!sortOrder)}
+            dataSymbol={sortOrder ? '⥥' : '⥣'}
+          >Sort to</button>
+
+          {/*<p className="sort-symbol">{sortOrder ? '⥥' : '⥣'}</p>*/}
+        </div>
+
         <ul>
           {moves}
         </ul>

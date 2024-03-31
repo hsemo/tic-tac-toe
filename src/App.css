@@ -1,4 +1,9 @@
-.App{
+.App {
+  width: 100%;
+  height: 100%;
+}
+
+.game {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -8,23 +13,22 @@
   text-align: center;
 }
 
-.board{
-  padding: 5px;
+.game-board {
+  height: 50%;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-.square {
-  background: #fff;
-  border: 1px solid #999;
-  float: left;
-  font-size: 24px;
-  font-weight: bold;
-  line-height: 34px;
-  height: 34px;
-  width: 34px;
-  margin-right: -1px;
-  margin-top: -1px;
-  padding: 0;
-  text-align: center;
+.status {
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
+.board{
+  /* padding: 5px; */
 }
 
 .board-row:after {
@@ -33,19 +37,91 @@
   display: table;
 }
 
-.status {
-  margin-bottom: 10px;
+.square {
+  background: #fff;
+  border: 1px solid #999;
+  float: left;
+  font-size: 60px;
+  /* font-weight: bold; */
+  line-height: 34px;
+  height: 70px;
+  width: 70px;
+  margin-right: -1px;
+  margin-top: -1px;
+  padding: 0;
+  text-align: center;
 }
 
-.game {
-  display: flex;
-  flex-direction: row;
+.win-square {
+  color: green;
 }
 
 .game-info {
   margin-left: 20px;
 }
 
-.win-square {
-  color: green;
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    margin-left: 0;
+    padding-left: 0;
+}
+
+.btn {
+  box-sizing: border-box;
+  padding: 5px;
+  margin: 5px;
+  border: 1px solid #000;
+  background-color: rgba(0, 0, 0, 0.2);
+  color: black;
+  border-radius: 5px;
+  text-align: center;
+  transition: .5s;
+}
+
+.btn:hover {
+  background-color: rgba(0, 0, 0, 0);
+  color: black;
+}
+
+.btn:active {
+  border-color: #0f0;
+  background-color: rgba(0, 255, 0, 0.1);
+  color: #019501;
+  transition: none;
+}
+
+.sort {
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* justify-content: space-around; */
+}
+
+.sort-btn {
+  width: 90px;
+}
+
+.sort-btn::after {
+  content: attr(dataSymbol);
+  width: 20px;
+  font-size: 20px;
+  margin: 0 0 0 5px;
+  padding: 0;
+  float: right;
+}
+
+.sort-symbol {
+  font-size: 20px;
+}
+
+.move-btn {
+  width: 110px;
+}
+
+p.next-move {
+  font-size: 20px;
 }
